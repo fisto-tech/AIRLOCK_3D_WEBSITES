@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DTD - Drum Type Diverter | Airlock</title>
+<link rel="icon" type="image/gif" href="Airlock-Logo.gif">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --blue:#06538a;
+  --orange:#f34703;
+  --light-bg:#f5f7fa;
+  --white:#ffffff;
+  --text:#2d2d2d;
+  --border:#dce3eb;
+  --header-bg:#1c2a3a;
+}
+
+body{
+  font-family:'Open Sans',sans-serif;
+  /* background:var(--light-bg); */
+  color:var(--text);
+}
+
+/* ── TOP BAR ── */
+.top-bar{
+  background:var(--header-bg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 24px;
+  height:56px;
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 2px 12px rgba(0,0,0,0.4);
+}
+.top-bar .brand{
+  font-family:'Rajdhani',sans-serif;
+  font-size:clamp(0.9rem,2.5vw,1.3rem);
+  font-weight:700;
+  color:#fff;
+  letter-spacing:1px;
+  text-align:center;
+}
+.top-bar .brand span{color:var(--orange);}
+
+/* ══════════════════════════════════
+   SECTION 1 — INSTRUCTIONS
+══════════════════════════════════ */
+.instr-section{
+  background:#fff;
+  padding:48px 24px 56px;
+ 
+}
+.instr-wrap{
+  max-width:1300px;
+  margin:0 auto;
+}
+.instr-title{
+  text-align:center;
+  font-family:sans-serif;
+  font-size:clamp(1.3rem,3vw,1.9rem);
+  font-weight:700;
+  color:var(--text);
+  letter-spacing:1px;
+  margin-bottom:10px;
+}
+.instr-subtitle{
+  text-align:center;
+  font-size:clamp(0.83rem,2.5vw,1.2rem);
+  font-weight:bold;
+  color:var(--orange);
+  margin-bottom:40px;
+  line-height:1.6;
+}
+.section-heading{
+  text-align:center;
+  font-family:sans-serif;
+  font-size:1.15rem;
+  font-weight:700;
+  color:var(--text);
+  margin:32px 0 16px;
+}
+/* .section-heading::after{
+  content:'';
+  display:block;
+  width:50px;
+  height:3px;
+  background:var(--blue);
+  margin:5px auto 0;
+  border-radius:2px;
+} */
+.input-group{margin-bottom:20px;}
+.input-label{
+  font-weight:900;
+  color:var(--blue);
+  font-size:1rem;
+  margin-bottom:9px;
+  display:block;
+}
+.option-row{
+  display:flex;
+  gap:10px;
+  margin-bottom:9px;
+  align-items:flex-start;
+  padding-left:16px;
+}
+.opt-tag{
+  /* background:var(--blue); */
+  color:#0a0a0a;
+  font-family:sans-serif;
+  font-weight:700;
+  font-size:0.9rem;
+  padding:2px 8px;
+  border-radius:3px;
+  white-space:nowrap;
+  margin-top:3px;
+  flex-shrink:0;
+}
+.opt-text{
+  font-size:0.88rem;
+  line-height:1.65;
+  color:#3a3a3a;
+}
+
+/* ══════════════════════════════════
+   VIEWER SECTIONS — shared
+══════════════════════════════════ */
+
+.viewer-header{
+ 
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 20px 12px;
+ 
+}
+.viewer-tag{
+  background:var(--header-bg);
+  color:#fff;
+  font-family:sans-serif;
+  font-size:0.85rem;
+  font-weight:700;
+  letter-spacing:1px;
+  padding:5px 12px;
+  border-radius:4px;
+  white-space:nowrap;
+}
+.viewer-title{
+
+  font-size:clamp(0.95rem,3vw,1.3rem);
+  font-weight:bold;
+  font-family: sans-serif;
+  color:#06538a;
+   
+  text-align:center;
+  flex:1;
+  padding:10px ;
+}
+.spacer{width:90px;}
+
+/* canvas */
+
+
+model-viewer {
+      width: 80%;
+      height: 500px;
+      margin: 0 auto;
+      border-radius: 12px;
+    }
+
+.canvas-area{
+  position:relative;
+
+  min-height:400px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:grab;
+  overflow:hidden;
+  user-select:none;
+}
+.canvas-area:active{cursor:grabbing;}
+.valve-svg{
+  width:clamp(240px,54%,480px);
+  filter:drop-shadow(0 8px 32px rgba(0,0,0,0.16));
+  transition:transform 0.07s linear;
+}
+.gesture-hint{
+  position:absolute;
+  bottom:12px;
+  left:12px;
+  background:rgba(26,111,172,0.78);
+  color:#fff;
+  font-size:0.68rem;
+  padding:4px 10px;
+  border-radius:4px;
+  pointer-events:none;
+}
+
+/* controls */
+.viewer-controls{
+   position: absolute;
+   bottom: 0;
+   left: 50%;
+    transform: translateX(-50%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  padding:18px 20px;
+ 
+}
+.ctrl-btn{
+  font-family:'Rajdhani',sans-serif;
+  font-size:1rem;
+  font-weight:700;
+  letter-spacing:1px;
+  padding:10px 20px;
+  border:none;
+  border-radius:0px;
+  cursor:pointer;
+  background:#d68034;
+  color:#fff;
+  box-shadow:0 3px 10px rgba(224,123,42,0.28);
+  transition:background 0.18s,transform 0.1s;
+}
+.ctrl-btn:hover{background:#c96b1a;transform:translateY(-1px);}
+.ctrl-btn:active{transform:translateY(0);}
+
+/* bottom label */
+.next-label{
+  text-align:center;
+  font-family:'Rajdhani',sans-serif;
+  font-size:1rem;
+  font-weight:700;
+  color:var(--blue);
+  letter-spacing:2px;
+  padding:12px 0 14px;
+  background:#fff;
+  border-top:1px solid var(--border);
+}
+
+/* hand animation */
+.hand-anim{
+  position:absolute;
+  left:36px;
+  bottom:54px;
+  width:62px;
+  opacity:0;
+  pointer-events:none;
+  animation:handSwipe 2.4s ease-in-out infinite;
+  transition:opacity 0.3s;
+}
+.hand-anim.playing{opacity:1;}
+@keyframes handSwipe{
+  0%  {transform:translateX(0) rotate(-10deg);}
+  50% {transform:translateX(28px) rotate(5deg);}
+  100%{transform:translateX(0) rotate(-10deg);}
+}
+
+/* explode parts */
+.epart{transition:transform 0.95s cubic-bezier(.4,0,.2,1);}
+
+/* responsive */
+@media(max-width:600px){
+  .top-bar .brand{font-size:0.82rem;}
+  .instr-section{padding:28px 14px 38px;}
+  .canvas-area{min-height:260px;}
+  .valve-svg{width:90%;}
+  .ctrl-btn{padding:8px 28px;font-size:0.88rem;}
+  .spacer{width:60px;}
+}
+
+
+
+
+.viewer-section{
+    background-color: #f3f2f2;
+}
+
+
+.viewer-section-2{
+    background-color: #ffffff !important;
+}
+
+.model-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* background: rgba(255,255,255,0.85); */
+  z-index: 10;
+  gap: 12px;
+}
+
+.spinner {
+  width: 42px;
+  height: 42px;
+  border: 4px solid #dce3eb;
+  border-top-color: #06538a;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.model-loader p {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #06538a;
+  letter-spacing: 1px;
+}
+
+.model-loader.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media screen and (min-width: 1800px) {
+  model-viewer {
+    height: 70vh;
+  }
+}
+
+section.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+/* ── NAVBAR ── */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+.nav-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.nav-logo {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+}
+.nav-center {
+  flex: 2;
+  text-align: center;
+}
+.nav-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(0.9rem, 3vw, 1.4rem);
+  font-weight: 700;
+  color: var(--blue);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.nav-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(6, 83, 138, 0.2);
+}
+.back-btn:hover {
+  background: var(--orange);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(243, 71, 3, 0.3);
+}
+.back-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 768px) {
+  .navbar { height: 60px; padding: 0 16px; }
+  .nav-logo { height: 40px; }
+  .back-btn span { display: none; }
+  .back-btn { padding: 8px; border-radius: 50%; }
+  .back-btn svg { width: 20px; height: 20px; margin: 0; }
+}
+
+/* Adjust body for fixed navbar */
+body { padding-top: 90px; }
+@media (max-width: 768px) { body { padding-top: 80px; } }
+
+</style>
+</head>
+ <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<body>
+
+<nav class="navbar">
+  <div class="nav-left">
+    <img src="Airlock-Logo.gif" alt="Airlock Logo" class="nav-logo">
+  </div>
+  <div class="nav-center">
+    <h1 class="nav-title">DTD - Drum Type Diverters</h1>
+  </div>
+  <div class="nav-right">
+    <button class="back-btn" onclick="goBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>BACK</span>
+    </button>
+  </div>
+</nav>
+
+
+
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 1  ·  INSTRUCTIONS
+══════════════════════════════════════════════════ -->
+<section class="instr-section">
+  <div class="instr-wrap">
+    <h1 class="instr-title"> DTD - Drum Type Diverters </h1>
+    <p class="instr-subtitle">Instructions for Rotating, Scaling, and Panning a model using both mouse and touch gestures.</p>
+
+    <!-- ROTATING -->
+    <h2 class="section-heading">Rotating a Model</h2>
+    <div class="input-group">
+      <span class="input-label">Using a Mouse:</span>
+      <div class="option-row">
+        <span class="opt-tag">Option 1 :</span>
+        <span class="opt-text">Click and hold the left mouse button on the model. Move the mouse in the direction you want to rotate the model. Release the mouse button to stop the rotation.</span>
+      </div>
+      <div class="option-row">
+        <span class="opt-tag">Option 2 :</span>
+        <span class="opt-text">Use the arrow keys (Left, Right, Up, Down) on the keyboard to rotate the model.</span>
+      </div>
+    </div>
+    <div class="input-group">
+      <span class="input-label">Using Touch:</span>
+      <div class="option-row">
+        <span class="opt-tag">Option 1 :</span>
+        <span class="opt-text">Touch and hold the model with one finger. Move your finger in the direction you want to rotate the model. Lift your finger to stop rotating.</span>
+      </div>
+    </div>
+
+   
+
+    <!-- SCALING -->
+    <h2 class="section-heading">Scaling a Model</h2>
+    <div class="input-group">
+      <span class="input-label">Using a Mouse:</span>
+      <div class="option-row">
+        <span class="opt-tag">Option 1 :</span>
+        <span class="opt-text">Click and hold the middle mouse button on the model. Move the mouse in any direction to scale the model. Release the mouse button to stop scaling.</span>
+      </div>
+    </div>
+    <div class="input-group">
+      <span class="input-label">Using Touch:</span>
+      <div class="option-row">
+        <span class="opt-tag">Option 1 :</span>
+        <span class="opt-text">Touch and hold the model with two fingers. Move your fingers in an up-and-down direction to scale the model. Lift your fingers to stop scaling.</span>
+      </div>
+    </div>
+
+ 
+
+    <!-- PANNING -->
+    <h2 class="section-heading">Panning a Model</h2>
+    <div class="input-group">
+      <span class="input-label">Using a Mouse:</span>
+      <div class="option-row">
+        <span class="opt-tag">Option 1 :</span>
+        <span class="opt-text">Click and hold the right mouse button on the model. Move the mouse in any direction to pan the model. Release the mouse button to stop panning.</span>
+      </div>
+    </div>
+    <div class="input-group">
+      <span class="input-label">Using Touch:</span>
+      <div class="option-row">
+        <span class="opt-tag">Option 1 :</span>
+        <span class="opt-text">Touch and hold the model with two fingers. Move your fingers away from or towards each other to increase or decrease the size of the model. Lift your fingers to stop scaling.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 2  ·  360° VIEW
+══════════════════════════════════════════════════ -->
+<section class="viewer-section hidden">
+  <div class="viewer-header">
+    
+    <div class="viewer-title">360° VIEW</div>
+    <!-- <div class="spacer"></div> -->
+  </div>
+
+ 
+
+     <model-viewer
+     id="viewer360"
+      src="./DTD/model/dtd-explode.gltf"
+      alt="3D model"
+      disable-tap disable-pan
+      camera-controls
+      shadow-intensity="1" camera-orbit="-183.6deg 89.29deg 75.34m" field-of-view="30deg">
+       <!-- ADD THIS -->
+  <div class="model-loader hidden" id="loader-360">
+    <div class="spinner"></div>
+    <p>Loading Model...</p>
+  </div>
+ 
+
+    </model-viewer>
+  
+</section>
+
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 3  ·  EXPLODED VIEW
+══════════════════════════════════════════════════ -->
+<section class="viewer-section hidden viewer-section-2">
+  <div class="viewer-header">
+    
+    <div class="viewer-title">EXPLODED&nbsp; VIEW</div>
+    <!-- <div class="spacer"></div> -->
+  </div>
+
+
+
+  <model-viewer
+      id="explodeViewer"
+      src="./DTD/model/dtd-explode.gltf"
+      alt="3D model"
+      disable-tap disable-pan
+      camera-controls
+      shadow-intensity="1" camera-orbit="-183.6deg 89.29deg 75.34m" field-of-view="30deg">
+
+       <!-- ADD THIS -->
+  <div class="model-loader hidden" id="loader-explode">
+    <div class="spinner"></div>
+    <p>Loading Model...</p>
+  </div>
+
+
+       <div class="viewer-controls">
+  <button id="explodePlayBtn"  class="ctrl-btn" onclick="explodePlay()">Play</button>
+  <button id="explodePauseBtn" class="ctrl-btn" onclick="explodePause()" disabled style="opacity:0.4;cursor:not-allowed;">Pause</button>
+  <button id="explodeStopBtn"  class="ctrl-btn" onclick="explodeStop()">Stop</button>
+</div>
+
+
+ 
+</section>
+
+
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 4  · FUNCTION VIEW
+══════════════════════════════════════════════════ -->
+<section class="viewer-section hidden">
+  <div class="viewer-header">
+   
+    <div class="viewer-title">FUNCTION VIEW</div>
+    <!-- <div class="spacer"></div> -->
+  </div>
+
+
+
+  <model-viewer
+      id="funcViewer"
+      src="./DTD/model/dtd-function.gltf"
+      alt="3D model"
+      disable-tap disable-pan
+      camera-controls
+      shadow-intensity="1" camera-orbit="-182.5deg 87.04deg 98.59m" field-of-view="30deg">
+
+       <!-- ADD THIS -->
+  <div class="model-loader hidden" id="loader-func">
+    <div class="spinner"></div>
+    <p>Loading Model...</p>
+  </div>
+
+      <div class="viewer-controls">
+  <button id="funcPlayBtn"  class="ctrl-btn" onclick="funcPlay()">Play</button>
+  <button id="funcPauseBtn" class="ctrl-btn" onclick="funcPause()" disabled style="opacity:0.4;cursor:not-allowed;">Pause</button>
+  <button id="funcStopBtn"  class="ctrl-btn" onclick="funcStop()">Stop</button>
+</div>
+    </model-viewer>
+
+  
+</section>
+
+
+
+
+
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  document.querySelectorAll(".viewer-section").forEach(section => {
+    section?.classList?.remove("hidden");
+  });
+
+  document.querySelectorAll(".model-loader").forEach(model => {
+    model?.classList?.remove("hidden");
+  });
+});
+
+
+
+const loaderMap = {
+  'viewer360':     'loader-360',
+  'explodeViewer': 'loader-explode',
+  'funcViewer':    'loader-func',
+  'sealViewer':    'loader-seal'
+};
+
+Object.entries(loaderMap).forEach(([viewerId, loaderId]) => {
+  const viewer = document.getElementById(viewerId);
+  const loader = document.getElementById(loaderId);
+
+  if (viewer && loader) {
+    viewer.addEventListener('load', () => {
+      loader.classList.add('hidden');
+      setTimeout(() => { loader.style.display = 'none'; }, 450);
+    });
+  }
+});
+
+
+/* ── HELPER — sets button states ── */
+function setBtns(prefix, state) {
+  // state: 'stopped' | 'playing' | 'paused'
+  const play  = document.getElementById(prefix + 'PlayBtn');
+  const pause = document.getElementById(prefix + 'PauseBtn');
+  const stop  = document.getElementById(prefix + 'StopBtn');
+
+  if (state === 'playing') {
+    play.disabled  = true;  play.style.opacity  = '0.4'; play.style.cursor  = 'not-allowed';
+    pause.disabled = false; pause.style.opacity = '1';   pause.style.cursor = 'pointer';
+    stop.disabled  = false; stop.style.opacity  = '1';   stop.style.cursor  = 'pointer';
+  } else if (state === 'paused') {
+    play.disabled  = false; play.style.opacity  = '1';   play.style.cursor  = 'pointer';
+    pause.disabled = true;  pause.style.opacity = '0.4'; pause.style.cursor = 'not-allowed';
+    stop.disabled  = false; stop.style.opacity  = '1';   stop.style.cursor  = 'pointer';
+  } else { // stopped
+    play.disabled  = false; play.style.opacity  = '1';   play.style.cursor  = 'pointer';
+    pause.disabled = true;  pause.style.opacity = '0.4'; pause.style.cursor = 'not-allowed';
+    stop.disabled  = false; stop.style.opacity  = '1';   stop.style.cursor  = 'pointer';
+  }
+}
+
+/* ── EXPLODED VIEW ── */
+function explodePlay() {
+  const v = document.getElementById('explodeViewer');
+  v.play({ repetitions: Infinity });
+  setBtns('explode', 'playing');
+}
+function explodePause() {
+  const v = document.getElementById('explodeViewer');
+  v.pause();
+  setBtns('explode', 'paused');
+}
+function explodeStop() {
+  const v = document.getElementById('explodeViewer');
+  v.pause();
+  v.currentTime = 0;
+  setBtns('explode', 'stopped');
+}
+
+/* ── SEAL CLEANING ── */
+function sealPlay() {
+  const v = document.getElementById('sealViewer');
+  v.play({ repetitions: Infinity });
+  setBtns('seal', 'playing');
+}
+function sealPause() {
+  const v = document.getElementById('sealViewer');
+  v.pause();
+  setBtns('seal', 'paused');
+}
+function sealStop() {
+  const v = document.getElementById('sealViewer');
+  v.pause();
+  v.currentTime = 0;
+  setBtns('seal', 'stopped');
+}
+
+/* ── FUNCTION VIEW ── */
+function funcPlay() {
+  const v = document.getElementById('funcViewer');
+  v.play({ repetitions: Infinity });
+  setBtns('func', 'playing');
+}
+function funcPause() {
+  const v = document.getElementById('funcViewer');
+  v.pause();
+  setBtns('func', 'paused');
+}
+function funcStop() {
+  const v = document.getElementById('funcViewer');
+  v.pause();
+  v.currentTime = 0;
+  setBtns('func', 'stopped');
+}
+
+function goBack() {
+
+  const hasValidReferrer =
+    document.referrer &&
+    new URL(document.referrer).origin === window.location.origin;
+
+  if (hasValidReferrer) {
+
+    const fallback = setTimeout(() => {
+      window.location.href = '/';
+    }, 300);
+
+    window.addEventListener('pageshow', () => {
+      clearTimeout(fallback);
+    }, { once: true });
+
+    window.history.back();
+
+  } else {
+
+    // Opened directly in new tab / external source
+    window.location.href = '/';
+  }
+}
+</script>
+</body>
+</html>
