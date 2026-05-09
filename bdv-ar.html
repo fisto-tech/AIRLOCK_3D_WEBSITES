@@ -599,11 +599,11 @@ body { padding-top: 90px; }
 
   <model-viewer
       id="funcViewer"
-      src=".//BDV/model/bdv-function.gltf"
+      src=".//BDV/model/bdv-function.glb"
       alt="3D model"
     disable-tap disable-pan
       camera-controls
-      shadow-intensity="1" camera-orbit="-49.42deg 80.87deg 1.617m" field-of-view="30deg">
+      shadow-intensity="1" camera-target="0m 0.25m 0m" camera-orbit="-49.42deg 80.87deg 1.617m" field-of-view="30deg">
 
        <!-- ADD THIS -->
   <div class="model-loader hidden" id="loader-func">
@@ -652,8 +652,24 @@ Object.entries(loaderMap).forEach(([viewerId, loaderId]) => {
   const loader = document.getElementById(loaderId);
 
   if (viewer && loader) {
-    viewer.addEventListener('load', () => {
+
+    viewer.addEventListener('load', async () => {
+
       loader.classList.add('hidden');
+      
+       if (viewerId === 'funcViewer') {
+
+        // Wait until model + animations are fully ready
+        await viewer.updateComplete;
+
+        viewer.play();
+
+        // Reset animation to first frame
+        viewer.currentTime = 0;
+
+        viewer.pause();
+      }
+
       setTimeout(() => { loader.style.display = 'none'; }, 450);
     });
   }
